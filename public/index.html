@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Example of the Authorization Code flow with Spotify</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container">
+    <div id="login">
+      <h1>This is an example of the Authorization Code flow</h1>
+      <a href="/login" class="btn btn-primary">Log in with Spotify</a>
+    </div>
+    <div id="loggedin">
+      <div id="user-profile">
+      </div>
+      <div id="oauth">
+      </div>
+
+      <div>
+
+      </div>
+
+      <div class="rowscontainer">
+        <div class="toprow row">
+          <div class="goodInput">
+            <label for="numberOfSongsToQueue"># of songs</label>
+            <input class="goodNumberInput" id="numberOfSongsToQueue" value="10">
+          </div>
+          <button class="goodInput goodButton" id="importSongsButton">Import Songs</button>
+          <div class="goodInput">
+            <label for="poolSize">Random</label>
+            <select id="poolSize" class="goodSelectInput">
+              <option value="2">Small</option>
+              <option value="3">Medium</option>
+              <option value="4">Large</option>
+            </select>
+          </div>
+          <button class="goodInput goodButton" id="shuffleSongs">Shuffle</button>
+          <button class="goodInput goodButton" id="addToQueue">Add to queue</button>
+
+
+          <div class="row">
+            <div class="column">Your Library</div>
+            <div class="column">Shuffled Library</div>
+          </div>
+          <div class="row">
+            <div class="column" id="beforeshuffle"></div>
+            <div class="column" id="aftershuffle"></div>
+          </div>
+        </div>
+
+        <div id="deviceSelectModal" class="modal">
+          <div class="modal-content" id="modal-content">
+            <span id="closeDeviceSelectModal" class="closeParentModal">&times;</span>
+            <h4>Which device do you want to queue these songs to?</h4>
+            <div id="devices-container"></div>
+          </div>
+        </div>
+
+        <div id="loadingModal" class="modal">
+          <div class="loader" style="display:block"></div>
+        </div>
+
+        <div id="queueSucessModal" class="modal">
+          <h3 class="modal-content">
+            <span class="closeParentModal">&times;</span>
+            Your shuffled songs have been added to your spotify queue!</h3>
+        </div>
+
+        <div id="errorModal" class="modal">
+          <div class="modal-content">
+            <span class="closeParentModal">&times;</span>
+            <div id="errorModalMessage"></div>
+          </div>
+        </div>
+
+        <div id="importSongsModal" class="modal">
+          <div class="modal-content" id="modal-content">
+            <span id="closeDeviceSelectModal" class="closeParentModal">&times;</span>
+            <h4>Where do you want to import songs from?</h4>
+            <div id="importSongsPlaylists"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <script id="user-profile-template" type="text/x-handlebars-template"></script>
+    <script id="oauth-template" type="text/x-handlebars-template">
+      <h2>oAuth info</h2>
+      <dl class="dl-horizontal">
+        <dt>Access token</dt><dd class="text-overflow">{{access_token}}</dd>
+        <dt>Refresh token</dt><dd class="text-overflow">{{refresh_token}}</dd>
+      </dl>
+  </script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
+    <script src="index.js"></script>
+    <script>
+      function getHashParams() {
+        var hashParams = {};
+        var e, r = /([^&;=]+)=?([^&;]*)/g,
+          q = window.location.hash.substring(1);
+        while (e = r.exec(q)) {
+          hashParams[e[1]] = decodeURIComponent(e[2]);
+        }
+        return hashParams;
+      }
+
+      var userProfileSource = document.getElementById('user-profile-template').innerHTML,
+        userProfileTemplate = Handlebars.compile(userProfileSource),
+        userProfilePlaceholder = document.getElementById('user-profile');
+
+      var oauthSource = document.getElementById('oauth-template').innerHTML,
+        oauthTemplate = Handlebars.compile(oauthSource),
+        oauthPlaceholder = document.getElementById('oauth');
+
+      var params = getHashParams();
+
+      var access_token = params.access_token,
+        refresh_token = params.refresh_token,
+        error = params.error;
+
+      let beforeShuffle = document.getElementById("beforeshuffle")
+      let afterShuffle = document.getElementById("aftershuffle")
+
+      let poolSizeHTML = document.getElementById('poolSize')
+      let numberOfSongsHTML = document.getElementById('numberOfSongsToQueue')
+
+      let deviceSelectModal = document.getElementById("deviceSelectModal")
+
+      let importSongsModal = document.getElementById("importSongsModal")
+      let importSongsButton = document.getElementById("importSongsButton")
+      let importSongsPlaylists = document.getElementById("importSongsPlaylists")
+
+      let errorModalHTML = document.getElementById('errorModal')
+      let errorModalMessageHTML = document.getElementById('errorModalMessage')
+
+      let loginHTML = document.getElementById('login')
+      let loggedinHTML = document.getElementById('loggedin')
+
+      if (error) {
+        alert('There was an error during the authentication');
+      } else {
+        if (access_token) {
+          loginHTML.style.display='none'
+          loggedinHTML.style.display='block'
+        } else {
+          loginHTML.style.display='block'
+          loggedinHTML.style.display='none'
+        }
+
+        document.getElementById('shuffleSongs').addEventListener('click', (event) => {
+          if (!playlistSongs.length) {
+            errorModal('Hey silly, you need to import songs before you can shuffle them!')
+          }
+
+          shuffledSongs = shuffleSongs(playlistSongs, Number(poolSizeHTML.value))
+          displayShuffled()
+
+        })
+
+        importSongsButton.addEventListener('click', (event) => {
+          showLoader(true)
+
+          importSongsModal.style.display = "block"
+
+          getAllPlaylists(access_token)
+            .then(playlists => {
+              console.log([playlists])
+              let playlistsHTML = ''
+              playlists.forEach(playlist => {
+                playlistsHTML += `
+                <div class="row"> 
+                  <div class="column" style="text-align:right; width:110px">
+                    <img class="thumbnail" src="${playlist["images"][0]["url"]}">
+                  </div>
+                  <div class="column" style="text-align:left;display:inline-block;line-height:28px;">
+                    <div>${playlist["name"]}</div>
+                    <div style="color:#a1a1a1">${playlist["owner"]["display_name"]}</div>
+                    <button onclick="playlistImportButton('${access_token}','${playlist["id"]}')" class="goodButton">Import</button>
+                    <a onclick='href="${playlist["external_urls"]["spotify"]}"'><button class="goodButton">Open In Spotify</button></a>
+
+                  </div>
+                </div>
+              `
+              })
+              importSongsPlaylists.innerHTML = playlistsHTML
+              showLoader(false)
+            })
+
+        })
+
+        document.getElementById('addToQueue').addEventListener('click', (event) => {
+
+          if (!shuffledSongs.length) {
+            errorModal("You need to shuffle the songs before you can queue them!")
+            return
+          }
+
+          // prompt the user to select a device
+          deviceSelectModal.style.display = 'block'
+          let devices = getDevices(access_token)
+          let html = ''
+
+          devices.then(devices => {
+            devices.forEach(device => {
+              let devicehtml =
+                `<a onclick="clickDevice('${device["id"]}')" class="goodButton">${device["name"]} - ${device["type"]} </a>`
+              html += devicehtml
+            })
+
+            document.getElementById('devices-container').innerHTML = html
+          })
+
+        })
+
+        Array.from(document.getElementsByClassName("closeParentModal")).forEach(element => {
+          element.addEventListener('click', event => {
+            console.log(event["srcElement"]["parentNode"]["parentNode"].style.display = 'none')
+          })
+        })
+
+
+      }
+    </script>
+
+</body>
+
+</html>
