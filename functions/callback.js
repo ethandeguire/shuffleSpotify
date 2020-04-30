@@ -7,6 +7,8 @@ var redirect_uri = 'https://spotifyshuffle.netlify.app/'; // Your redirect uri
 
 
 exports.handler = function (event, context, callback) {
+    console.log(event)
+
     var authOptions = {
         url: 'https://accounts.spotify.com/api/token',
         form: {
