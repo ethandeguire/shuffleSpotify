@@ -19,10 +19,6 @@
       <div id="oauth">
       </div>
 
-      <div>
-
-      </div>
-
       <div class="rowscontainer">
         <div class="toprow row">
           <div class="goodInput">
@@ -95,7 +91,7 @@
         <dt>Access token</dt><dd class="text-overflow">{{access_token}}</dd>
         <dt>Refresh token</dt><dd class="text-overflow">{{refresh_token}}</dd>
       </dl>
-  </script>
+    </script>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
     <script src="index.js"></script>
@@ -146,11 +142,11 @@
         alert('There was an error during the authentication');
       } else {
         if (access_token) {
-          loginHTML.style.display='none'
-          loggedinHTML.style.display='block'
+          loginHTML.style.display = 'none'
+          loggedinHTML.style.display = 'block'
         } else {
-          loginHTML.style.display='block'
-          loggedinHTML.style.display='none'
+          loginHTML.style.display = 'block'
+          loggedinHTML.style.display = 'none'
         }
 
         document.getElementById('shuffleSongs').addEventListener('click', (event) => {
