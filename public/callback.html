@@ -41,14 +41,15 @@
         let code = getParameterByName('code') || null
         let state = getParameterByName('state') || null
         let access_token = getParameterByName('access_token') || null
+        let refresh_token = getParameterByName('refresh_token') || null
 
         console.log(code, state)
 
-        if (access_token !== null) window.location.href = `/index.html?access_code=${access_token}`
+        if (access_token !== null) window.location.replace(`/index.html?access_code=${access_token}&refresh_token=${refresh_token}`)
 
         if (state === null || state !== getCookie('spotify_auth_state') || code === null) {
             console.log("here")
-            window.location.href = "/index.html"
+            window.location.replace = "/index.html"
         }
 
         fetch(`https://spotifyshuffle.netlify.app/.netlify/functions/callback?code=${code}`)
