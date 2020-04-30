@@ -43,7 +43,7 @@
 
         console.log(code, state)
 
-        if (state === null || state !== getCookie('spotify_auth_state') || code === null) window.top.location.href = ''
+        if (state === null || state !== getCookie('spotify_auth_state') || code === null) window.location.href = ''
 
         fetch(`https://spotifyshuffle.netlify.app/.netlify/functions/callback?code=${code}`)
             .then(res => console.log(res))
