@@ -45,15 +45,16 @@
 
         console.log(code, state)
 
-        if (access_token !== null) window.location.replace(`/index.html?access_code=${access_token}&refresh_token=${refresh_token}`)
-
-        if (state === null || state !== getCookie('spotify_auth_state') || code === null) {
+        if (access_token !== null) {
+            console.log(here, access_token)
+            window.location.replace(`/index.html?access_code=${access_token}&refresh_token=${refresh_token}`)
+        } else if (state === null || state !== getCookie('spotify_auth_state') || code === null) {
             console.log("here")
             window.location.replace = "/index.html"
+        } else {
+            fetch(`https://spotifyshuffle.netlify.app/.netlify/functions/callback?code=${code}`)
+                .then(res => console.log(res))
         }
-
-        fetch(`https://spotifyshuffle.netlify.app/.netlify/functions/callback?code=${code}`)
-            .then(res => console.log(res))
     </script>
 </body>
 
