@@ -15,6 +15,7 @@
         fetch("https://spotifyshuffle.netlify.app/.netlify/functions/login")
             .then(res => res.json())
             .then(res => {
+                console.log(res)
                 document.cookie = `spotify_auth_state=${res["cookie"]['spotify_auth_state']}`
                 window.location.replace(res['redirect'])
             })

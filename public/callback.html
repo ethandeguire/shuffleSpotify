@@ -54,7 +54,8 @@
             window.location.replace = "/index.html"
         } else {
             fetch(`https://spotifyshuffle.netlify.app/.netlify/functions/callback?code=${code}`)
-                .then(res => console.log(res))
+                .then(res => res.json())
+                .then(res => window.location.replace(res['redirect']))
         }
     </script>
 </body>
