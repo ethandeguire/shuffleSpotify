@@ -1,9 +1,9 @@
 var querystring = require('querystring');
+var request = require('request'); // "Request" library
 
 var client_id = 'f641378c46af4b80a54f0ac4411cebdd'; // Your client id
 var client_secret = '66677fa7eb17447cafb128fd96d1b0db'; // Your secret
 var redirect_uri = 'https://spotifyshuffle.netlify.app/'; // Your redirect uri
-var request = require('request'); // "Request" library
 
 
 exports.handler = function (event, context, callback) {
