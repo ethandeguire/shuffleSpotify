@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Example of the Authorization Code flow with Spotify</title>
+  <title>spotifyshuffle</title>
   <link rel="stylesheet" type="text/css" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
 </head>
@@ -10,7 +10,8 @@
 <body>
   <div class="container">
     <div id="login">
-      <h1>This is an example of the Authorization Code flow</h1>
+      <h1 style="max-width: 500px; margin:auto; margin-bottom: 50px;">Welcome to spotifyshuffle, a better shuffle
+        algorithm for spotify, because the default one is garbage and I hate it.</h1>
       <a href="/login" class="btn btn-primary">Log in with Spotify</a>
     </div>
     <div id="loggedin">
@@ -96,6 +97,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
     <script src="index.js"></script>
     <script>
+      /*
       function getHashParams() {
         var hashParams = {};
         var e, r = /([^&;=]+)=?([^&;]*)/g,
@@ -105,6 +107,7 @@
         }
         return hashParams;
       }
+      */
 
       function getParameterByName(name, url) {
         if (!url) url = window.location.href;
