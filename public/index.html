@@ -106,6 +106,16 @@
         return hashParams;
       }
 
+      function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+          results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+      }
+
       var userProfileSource = document.getElementById('user-profile-template').innerHTML,
         userProfileTemplate = Handlebars.compile(userProfileSource),
         userProfilePlaceholder = document.getElementById('user-profile');
@@ -114,11 +124,15 @@
         oauthTemplate = Handlebars.compile(oauthSource),
         oauthPlaceholder = document.getElementById('oauth');
 
-      var params = getHashParams();
+      // var params = getHashParams();
 
-      var access_token = params.access_token,
-        refresh_token = params.refresh_token,
-        error = params.error;
+      // var access_token = params.access_token,
+      //   refresh_token = params.refresh_token,
+      //   error = params.error;
+
+      access_token = getParameterByName("access_token")
+      refresh_token = getParameterByName("access_token")
+      error = getParameterByName("error")
 
       let beforeShuffle = document.getElementById("beforeshuffle")
       let afterShuffle = document.getElementById("aftershuffle")
