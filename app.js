@@ -7,7 +7,6 @@
  * https://developer.spotify.com/web-api/authorization-guide/#authorization_code_flow
  */
 
- /*
 var express = require('express'); // Express web server framework
 var request = require('request'); // "Request" library
 var cors = require('cors');
@@ -63,7 +62,7 @@ app.get('/callback', function(req, res) {
   var storedState = req.cookies ? req.cookies[stateKey] : null;
 
   if (state === null || state !== storedState) {
-    res.redirect('/#' +
+    res.redirect('/index.html?' +
       querystring.stringify({
         error: 'state_mismatch'
       }));
@@ -100,13 +99,13 @@ app.get('/callback', function(req, res) {
         });
 
         // we can also pass the token to the browser to make requests from there
-        res.redirect('/#' +
+        res.redirect('/index.html?' +
           querystring.stringify({
             access_token: access_token,
             refresh_token: refresh_token
           }));
       } else {
-        res.redirect('/#' +
+        res.redirect('/index.html$' +
           querystring.stringify({
             error: 'invalid_token'
           }));
@@ -141,4 +140,3 @@ app.get('/refresh_token', function(req, res) {
 
 console.log('Listening on 8888');
 app.listen(8888);
-*/

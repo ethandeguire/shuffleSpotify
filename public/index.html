@@ -127,12 +127,6 @@
         oauthTemplate = Handlebars.compile(oauthSource),
         oauthPlaceholder = document.getElementById('oauth');
 
-      // var params = getHashParams();
-
-      // var access_token = params.access_token,
-      //   refresh_token = params.refresh_token,
-      //   error = params.error;
-
       access_token = getParameterByName("access_token")
       refresh_token = getParameterByName("access_token")
       error = getParameterByName("error")
@@ -183,8 +177,22 @@
 
           getAllPlaylists(access_token)
             .then(playlists => {
-              console.log([playlists])
               let playlistsHTML = ''
+
+              playlistsHTML += `
+                <div class="row"> 
+                  <div class="column" style="text-align:right; width:110px">
+                    <img class="thumbnail" src="./images/likedsongs.png">
+                  </div>
+                  <div class="column" style="text-align:left;display:inline-block;line-height:28px;">
+                    <div>Your Liked Songs</div>
+                    <div style="color:#a1a1a1">you</div>
+                    <button onclick="libraryImportButton('${access_token}')" class="goodButton">Import</button>
+                    <a target="none" onclick='href="https://open.spotify.com/collection/tracks"'><button class="goodButton">Open In Spotify</button></a>
+                  </div>
+                </div>
+                `
+
               playlists.forEach(playlist => {
                 playlistsHTML += `
                 <div class="row"> 
@@ -195,8 +203,7 @@
                     <div>${playlist["name"]}</div>
                     <div style="color:#a1a1a1">${playlist["owner"]["display_name"]}</div>
                     <button onclick="playlistImportButton('${access_token}','${playlist["id"]}')" class="goodButton">Import</button>
-                    <a onclick='href="${playlist["external_urls"]["spotify"]}"'><button class="goodButton">Open In Spotify</button></a>
-
+                    <a target="none" onclick='href="${playlist["external_urls"]["spotify"]}"'><button class="goodButton">Open In Spotify</button></a>
                   </div>
                 </div>
               `
@@ -204,7 +211,6 @@
               importSongsPlaylists.innerHTML = playlistsHTML
               showLoader(false)
             })
-
         })
 
         document.getElementById('addToQueue').addEventListener('click', (event) => {
@@ -233,7 +239,7 @@
 
         Array.from(document.getElementsByClassName("closeParentModal")).forEach(element => {
           element.addEventListener('click', event => {
-            console.log(event["srcElement"]["parentNode"]["parentNode"].style.display = 'none')
+            event["srcElement"]["parentNode"]["parentNode"].style.display = 'none'
           })
         })
 

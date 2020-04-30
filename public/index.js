@@ -78,14 +78,6 @@ const shuffleSongs = (songs, poolSize = 2) => {
     return outputList
 }
 
-const importPlaylist = (access_token, playlistID) => {
-    showLoader(true)
-    return getAllofSomething(access_token, `https://api.spotify.com/v1/playlists/${playlistID}/tracks`)
-        .then(tracks => {
-            playlistSongs = tracks.splice(0, numberOfSongsHTML.value)
-            showLoader(false)
-        })
-}
 
 const displayPlaylist = () => {
     beforeShuffle.innerHTML = ''
@@ -107,14 +99,26 @@ const displayShuffled = () => {
     return true
 }
 
+const libraryImportButton = (access_token) => {
+    importSongsModal.style.display = 'none';
+    showLoader(true)
+    return getAllSavedSongs(access_token)
+        .then(tracks => {
+            playlistSongs = tracks.splice(0, numberOfSongsHTML.value)
+            displayPlaylist()
+            showLoader(false)
+        })
+}
+
 const playlistImportButton = (access_token, playlistID) => {
     importSongsModal.style.display = 'none';
     showLoader(true)
 
-    return importPlaylist(access_token, playlistID)
-        .then(success => {
+    return getAllofSomething(access_token, `https://api.spotify.com/v1/playlists/${playlistID}/tracks`)
+        .then(tracks => {
+            playlistSongs = tracks.splice(0, numberOfSongsHTML.value)
+            displayPlaylist()
             showLoader(false)
-            displayPlaylist(access_token)
         })
 
 }
@@ -192,5 +196,5 @@ const clickDevice = (deviceIDtemp) => {
 
 const errorModal = message => {
     errorModalMessageHTML.innerHTML = message
-    errorModalHTML.style.display='block'
+    errorModalHTML.style.display = 'block'
 }
