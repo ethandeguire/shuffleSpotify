@@ -24,10 +24,10 @@ exports.handler = function (event, context, callback) {
 
     return callback(null, {
         statusCode: 200,
-        body: {
+        body: JSON.stringify({
             redirect: url,
             cookie: {'spotify_auth_state': state}
-        }
+        })
     })
 
 }
