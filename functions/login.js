@@ -18,7 +18,9 @@ exports.handler = function (event, context, callback) {
             state: state
         })
 
-    callback(null, {
+    console.log(url, state)
+
+    return callback(null, {
         statusCode: 200,
         body: {
             redirect: url,
