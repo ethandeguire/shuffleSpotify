@@ -40,8 +40,11 @@
 
         let code = getParameterByName('code') || null
         let state = getParameterByName('state') || null
+        let access_token = getParameterByName('access_token') || null
 
         console.log(code, state)
+
+        if (access_token !== null) window.location.href = `/index.html?access_code=${access_token}`
 
         if (state === null || state !== getCookie('spotify_auth_state') || code === null) {
             console.log("here")
