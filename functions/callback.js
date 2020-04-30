@@ -7,7 +7,6 @@ var redirect_uri = 'https://spotifyshuffle.netlify.app/'; // Your redirect uri
 
 
 exports.handler = function (event, context, callback) {
-    console.log(event["queryStringParameters"], event["queryStringParameters"]["code"])
     code = event["queryStringParameters"]["code"]
 
     var authOptions = {
@@ -23,8 +22,11 @@ exports.handler = function (event, context, callback) {
         json: true
     };
 
+    console.log(authOptions)
+
     request.post(authOptions, function (error, response, body) {
         if (!error && response.statusCode === 200) {
+            console.log(error, response, body)
 
             var access_token = body.access_token,
                 refresh_token = body.refresh_token;
@@ -36,6 +38,8 @@ exports.handler = function (event, context, callback) {
                     redirect: `/index.html?access_token=${access_token}&refresh_token=${refresh_token}`
                 })
             })
+        } else {
+            console.log(error)
         }
     });
 
