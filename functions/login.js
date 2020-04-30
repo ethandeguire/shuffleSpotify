@@ -6,6 +6,8 @@ var redirect_uri = 'https://spotifyshuffle.netlify.app/callback'; // Your redire
 
 exports.handler = function (event, context, callback) {
 
+    console.log("----- function invoked")
+
     var state = generateRandomString(16);
 
     var scope = 'ugc-image-upload user-follow-read user-follow-modify user-read-recently-played user-top-read user-read-playback-position user-library-read user-library-modify user-read-playback-state user-read-currently-playing user-modify-playback-state playlist-read-collaborative playlist-modify-private playlist-modify-public playlist-read-private streaming app-remote-control user-read-email user-read-private';
