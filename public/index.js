@@ -99,7 +99,7 @@ const displayShuffled = () => {
     return true
 }
 
-const libraryImportButton = (access_token) => {
+const libraryImportButton = () => {
     importSongsModal.style.display = 'none';
     showLoader(true)
     return getAllSavedSongs(access_token)
@@ -110,7 +110,7 @@ const libraryImportButton = (access_token) => {
         })
 }
 
-const playlistImportButton = (access_token, playlistID) => {
+const playlistImportButton = (playlistID) => {
     importSongsModal.style.display = 'none';
     showLoader(true)
 
@@ -172,6 +172,22 @@ const formatSong = (song) => {
             </div>
         </a>
     `
+}
+
+const formatPlaylist = (thumbnailSrc, name, ownerName, onclickFunction, spotifyURL) => {
+    return `
+    <div class="row"> 
+      <div class="column" style="text-align:right; width:110px">
+        <img class="thumbnail" src="${thumbnailSrc}">
+      </div>
+      <div class="column" style="text-align:left;display:inline-block;line-height:28px;">
+        <div>${name}</div>
+        <div style="color:#a1a1a1">${ownerName}</div>
+        <button onclick="${onclickFunction}" class="goodButton">Import</button>
+        <a target="none" onclick='href="${spotifyURL}"'><button class="goodButton">Open In Spotify</button></a>
+      </div>
+    </div>
+  `
 }
 
 const queueSongs = () => {
